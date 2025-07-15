@@ -9,48 +9,23 @@
  *
  * @see https://github.com/WordPress/gutenberg/blob/trunk/docs/reference-guides/block-api/block-metadata.md#render
  */
-
-// Generates a unique id for aria-controls.
-$unique_id = wp_unique_id( 'p-' );
-
-// Adds the global state.
-wp_interactivity_state(
-	'create-block',
-	array(
-		'isDark'    => false,
-		'darkText'  => esc_html__( 'Switch to Light', 'quiz-block' ),
-		'lightText' => esc_html__( 'Switch to Dark', 'quiz-block' ),
-		'themeText'	=> esc_html__( 'Switch to Dark', 'quiz-block' ),
-	)
-);
 ?>
 
 <div
-	<?php echo get_block_wrapper_attributes(); ?>
-	data-wp-interactive="create-block"
-	<?php echo wp_interactivity_data_wp_context( array( 'isOpen' => false ) ); ?>
-	data-wp-watch="callbacks.logIsOpen"
-	data-wp-class--dark-theme="state.isDark"
+	class="quiz-block-frontend"
+	data-wp-interactive="quiz-block"
+	<?php echo wp_interactivity_data_wp_context( $attributes ); ?>
+	style="background-color: <?php echo $attributes['bgColor']; ?>"
 >
-	<button
-		data-wp-on--click="actions.toggleTheme"
-		data-wp-text="state.themeText"
-	></button>
-
-	<button
-		data-wp-on--click="actions.toggleOpen"
-		data-wp-bind--aria-expanded="context.isOpen"
-		aria-controls="<?php echo esc_attr( $unique_id ); ?>"
-	>
-		<?php esc_html_e( 'Toggle', 'quiz-block' ); ?>
-	</button>
-
-	<p
-		id="<?php echo esc_attr( $unique_id ); ?>"
-		data-wp-bind--hidden="!context.isOpen"
-	>
-		<?php
-			esc_html_e( 'Quiz Block - hello from an interactive block!', 'quiz-block' );
-		?>
-	</p>
+	<p><?php echo $attributes['question']; ?></p>
+	<ul>
+		<?php foreach ( $attributes['answers'] as $answer ) : ?>
+			<li
+			data-wp-context='{"answer": "<?php echo $answer; ?>"}'
+			data-wp-on--click="actions.guessAttempt"
+			>
+				<?php echo $answer; ?>
+			</li>
+		<?php endforeach; ?>
+	</ul>
 </div>

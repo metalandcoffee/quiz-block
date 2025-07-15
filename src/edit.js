@@ -11,7 +11,6 @@ import {
 	PanelBody,
 	PanelRow,
 	ColorPicker,
-	Dashicon,
 } from '@wordpress/components';
 import { starEmpty, starFilled } from '@wordpress/icons';
 
@@ -21,11 +20,6 @@ import {
 	BlockControls,
 	AlignmentToolbar,
 } from '@wordpress/block-editor';
-
-/**
- * External dependencies.
- */
-import { ChromePicker } from 'react-color';
 
 /**
  * Retrieves the translation of text.
@@ -47,25 +41,27 @@ import { __ } from '@wordpress/i18n';
  * @return {Element} Element to render.
  */
 export default function Edit( { attributes, setAttributes } ) {
-	// @todo switch to using core ColorPicker.
 	// @todo destructure attributes.
 	// @todo any opportunites to use useEffect?
 	// @todo any opportunities to use state?
+	// @todo update readme with explanation 
 	// create state for preview
 	// Use sass files for styling
 	// const [ preview, setPreview ] = useState( false );
+
+	const { bgColor, theAlignment, question, answers, correctAnswer } = attributes;
 
 	function updateQuestion( value ) {
 		setAttributes( { question: value } );
 	}
 
 	function deleteAnswer( indexToDelete ) {
-		const newAnswers = attributes.answers.filter( function ( x, index ) {
+		const newAnswers = answers.filter( function ( x, index ) {
 			return index != indexToDelete;
 		} );
 		setAttributes( { answers: newAnswers } );
 
-		if ( indexToDelete == attributes.correctAnswer ) {
+		if ( indexToDelete == correctAnswer ) {
 			setAttributes( { correctAnswer: undefined } );
 		}
 	}
@@ -77,25 +73,25 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<div { ...useBlockProps() }>
 			<div
-				style={ { backgroundColor: attributes.bgColor } }
+				style={ { backgroundColor: bgColor } }
 			>
 				<BlockControls>
 					<AlignmentToolbar
-						value={ attributes.theAlignment }
-						onChange={ ( x ) =>
-							setAttributes( { theAlignment: x } )
+						value={ theAlignment }
+						onChange={ ( newAlignment ) =>
+							setAttributes( { theAlignment: newAlignment } )
 						}
 					/>
 				</BlockControls>
 				<InspectorControls>
 					<PanelBody title="Background Color" initialOpen={ true }>
 						<PanelRow>
-							<ChromePicker
-								color={ attributes.bgColor }
-								onChangeComplete={ ( x ) =>
-									setAttributes( { bgColor: x.hex } )
+							<ColorPicker
+								color={ bgColor }
+								onChange={ ( newColor ) =>
+									setAttributes( { bgColor: newColor } )
 								}
-								disableAlpha={ true }
+								enableAlpha
 							/>
 						</PanelRow>
 					</PanelBody>
@@ -104,16 +100,30 @@ export default function Edit( { attributes, setAttributes } ) {
 					__next40pxDefaultSize
 					__nextHasNoMarginBottom
 					label="Question:"
-					value={ attributes.question }
+					value={ question }
 					onChange={ updateQuestion }
 					style={ { fontSize: '20px' } }
 				/>
 				<p style={ { fontSize: '13px', margin: '20px 0 8px 0' } }>
 					Answers:
 				</p>
-				{ attributes.answers.map( function ( answer, index ) {
+				{ answers.map( function ( answer, index ) {
 					return (
 						<Flex key={ index }>
+							<FlexItem>
+								<Button
+									onClick={ () => markAsCorrect( index ) }
+								>
+									<Icon
+										className="mark-as-correct"
+										icon={
+											correctAnswer == index
+												? starFilled
+												: starEmpty
+										}
+									/>
+								</Button>
+							</FlexItem>
 							<FlexBlock>
 								<TextControl
 									__next40pxDefaultSize
@@ -122,7 +132,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									value={ answer }
 									onChange={ ( newValue ) => {
 										const newAnswers =
-											attributes.answers.concat( [] );
+											answers.concat( [] );
 										newAnswers[ index ] = newValue;
 										setAttributes( {
 											answers: newAnswers,
@@ -130,20 +140,6 @@ export default function Edit( { attributes, setAttributes } ) {
 									} }
 								/>
 							</FlexBlock>
-							<FlexItem>
-								<Button
-									onClick={ () => markAsCorrect( index ) }
-								>
-									<Icon
-										className="mark-as-correct"
-										icon={
-											attributes.correctAnswer == index
-												? starFilled
-												: starEmpty
-										}
-									/>
-								</Button>
-							</FlexItem>
 							<FlexItem>
 								<Button
 									className="answer-delete"
@@ -156,16 +152,15 @@ export default function Edit( { attributes, setAttributes } ) {
 					);
 				} ) }
 				<Button
-					isPrimary
 					onClick={ () => {
 						setAttributes( {
-							answers: attributes.answers.concat( [
+							answers: answers.concat( [
 								'',
 							] ),
 						} );
 					} }
 				>
-					Add another answer
+					Add another choice
 				</Button>
 			</div>
 		</div>

@@ -3,16 +3,17 @@
  */
 import { store, getContext } from '@wordpress/interactivity';
 
-const { state } = store( 'create-block', {
+const { state } = store( 'quiz-block', {
 	state: {
 		get themeText() {
 			return state.isDark ? state.darkText : state.lightText;
 		},
 	},
 	actions: {
-		toggleOpen() {
+		guessAttempt: () => {
 			const context = getContext();
-			context.isOpen = ! context.isOpen;
+			console.log(context);
+			console.log(context.question);
 		},
 		toggleTheme() {
 			state.isDark = ! state.isDark;

@@ -10,7 +10,7 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       quiz-block
  *
- * @package           create-block
+ * @package           quiz-block
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
