@@ -12,11 +12,22 @@ const { state } = store( 'quiz-block', {
 	actions: {
 		guessAttempt: () => {
 			const context = getContext();
-			console.log(context);
-			console.log(context.question);
-		},
-		toggleTheme() {
-			state.isDark = ! state.isDark;
+
+			// If the quiz has already been solved, do nothing.
+			if ( context.solved ) {
+				return;
+			}
+
+			// Otherwise, evaluate the guess.
+			if ( context.index === context.correctAnswer ) {
+				context.showCongrats = true;
+				context.solved = true;
+			} else {
+				context.showSorry = true;
+				setTimeout( () => {
+					context.showSorry = false;
+				}, 2000 );
+			}
 		},
 	},
 	callbacks: {
