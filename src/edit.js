@@ -42,6 +42,7 @@ import { __ } from '@wordpress/i18n';
  */
 export default function Edit( { attributes, setAttributes } ) {
 	// @todo destructure attributes.
+	// @todo replace icons with icons from wordpress core
 	// @todo any opportunites to use useEffect?
 	// @todo any opportunities to use state?
 	// @todo update readme with explanation 

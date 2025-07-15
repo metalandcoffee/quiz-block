@@ -21,7 +21,9 @@ const { state } = store( 'quiz-block', {
 			// Otherwise, evaluate the guess.
 			if ( context.index === context.correctAnswer ) {
 				context.showCongrats = true;
-				context.solved = true;
+				setTimeout(() => {
+					context.solved = true;
+				}, 2000);
 			} else {
 				context.showSorry = true;
 				setTimeout( () => {
@@ -31,10 +33,9 @@ const { state } = store( 'quiz-block', {
 		},
 	},
 	callbacks: {
-		logIsOpen: () => {
-			const { isOpen } = getContext();
-			// Log the value of `isOpen` each time it changes.
-			console.log( `Is open: ${ isOpen }` );
+		fadeIncorrect: () => {
+			const { solved, correct } = getContext();
+			return solved && !correct;
 		},
 	},
 } );

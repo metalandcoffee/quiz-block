@@ -33,24 +33,34 @@
     font-size: 0.93rem;
     flex: 1;
     margin: 0 0 15px 0;
-    @media screen and (min-width: 767px) {
-      margin: 0 20px 0 0;
-    }
-    padding: 0;
+	padding: 0;
     list-style: none;
     cursor: pointer;
     padding: 10px;
     border-radius: 4px;
     background-color: rgba(255, 255, 255, 0.7);
+	display: flex;
+    justify-content: center;
+    align-items: end;
+    line-height: normal;
+
+    @media screen and (min-width: 767px) {
+      margin: 0 20px 0 0;
+    }
 
     &:hover {
       background-color: rgba(255, 255, 255, 0.95);
     }
 
+	.icon-container:not([hidden]) {
+		display: flex;
+	}
+	
     svg {
-      fill: rgb(0, 158, 47);
-      margin-right: 5px;
-      margin-bottom: -5px;
+      stroke: rgb(0, 158, 47);
+      height: 20px;
+	  width: 20px;
+	  margin-right: 5px;
     }
   }
 
@@ -66,7 +76,7 @@
     opacity: 0.25;
 
     svg {
-      fill: rgb(235, 0, 0);
+      stroke: rgb(235, 0, 0);
     }
   }
 
